@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multiplayer Tic-Tac-Toe</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Tic-Tac-Toe</h1>
+      <p class="subtitle">Real-time multiplayer</p>
+    </header>
+
+    <section id="lobby" class="panel">
+      <h2>Join a game</h2>
+      <div class="form-group">
+        <label for="playerName">Your name</label>
+        <input type="text" id="playerName" placeholder="Player name" maxlength="20">
+      </div>
+      <div class="form-group">
+        <label for="roomId">Room code</label>
+        <input type="text" id="roomId" placeholder="e.g. room1" maxlength="20">
+      </div>
+      <button id="joinBtn" class="btn btn-primary">Join room</button>
+      <p id="lobbyError" class="error" aria-live="polite"></p>
+    </section>
+
+    <section id="game" class="panel hidden">
+      <div class="game-info">
+        <p id="turnDisplay">Waiting for players…</p>
+        <p id="playersInfo"></p>
+      </div>
+      <div class="board" id="board" aria-label="Tic-tac-toe board">
+        <button type="button" class="cell" data-index="0" aria-label="Cell 1"></button>
+        <button type="button" class="cell" data-index="1" aria-label="Cell 2"></button>
+        <button type="button" class="cell" data-index="2" aria-label="Cell 3"></button>
+        <button type="button" class="cell" data-index="3" aria-label="Cell 4"></button>
+        <button type="button" class="cell" data-index="4" aria-label="Cell 5"></button>
+        <button type="button" class="cell" data-index="5" aria-label="Cell 6"></button>
+        <button type="button" class="cell" data-index="6" aria-label="Cell 7"></button>
+        <button type="button" class="cell" data-index="7" aria-label="Cell 8"></button>
+        <button type="button" class="cell" data-index="8" aria-label="Cell 9"></button>
+      </div>
+      <div id="resultMessage" class="result-message" aria-live="polite"></div>
+      <div class="actions">
+        <button id="restartBtn" class="btn btn-secondary hidden">Play again</button>
+        <button id="leaveBtn" class="btn btn-outline">Leave room</button>
+      </div>
+    </section>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
