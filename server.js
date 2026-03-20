@@ -20,7 +20,10 @@ function resolvePublicDir() {
 
   for (const dir of candidates) {
     try {
-      if (fs.existsSync(dir) && fs.statSync(dir).isDirectory()) return dir;
+      const indexPath = path.join(dir, 'index.html');
+      if (fs.existsSync(dir) && fs.statSync(dir).isDirectory() && fs.existsSync(indexPath)) {
+        return dir;
+      }
     } catch {
       // Ignore and try next candidate
     }
