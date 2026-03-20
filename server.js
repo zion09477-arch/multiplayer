@@ -1,16 +1,43 @@
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
+const fs = require('fs');
 const path = require('path');
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-const publicDir = path.join(__dirname, 'public');
+function resolvePublicDir() {
+  // Render build setups sometimes run the server from a different working directory
+  // (e.g. `/opt/render/project/src`), which breaks relative `__dirname/public` paths.
+  const candidates = [
+    path.join(__dirname, 'public'),
+    path.join(__dirname, '..', 'public'),
+    path.join(process.cwd(), 'public'),
+    path.join(process.cwd(), 'src', 'public'),
+  ];
+
+  for (const dir of candidates) {
+    try {
+      if (fs.existsSync(dir) && fs.statSync(dir).isDirectory()) return dir;
+    } catch {
+      // Ignore and try next candidate
+    }
+  }
+
+  // Fall back to the original location; requests will 500 with a clearer error.
+  return path.join(__dirname, 'public');
+}
+
+const publicDir = resolvePublicDir();
 app.use(express.static(publicDir));
 app.get('/', (req, res) => {
-  res.sendFile(path.join(publicDir, 'index.html'));
+  const indexPath = path.join(publicDir, 'index.html');
+  if (!fs.existsSync(indexPath)) {
+    return res.status(500).send(`index.html not found in public dir: ${publicDir}`);
+  }
+  res.sendFile(indexPath);
 });
 
 // Game state: roomId -> { board, turn, players, winner }
